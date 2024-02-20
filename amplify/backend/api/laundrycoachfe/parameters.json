@@ -1,0 +1,12 @@
+{
+  "AppSyncApiName": "laundrycoachfe",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2024-02-18T17:04:26.647Z",
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authlaundrycoachfee69e9284",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

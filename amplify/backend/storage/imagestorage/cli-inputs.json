@@ -1,0 +1,15 @@
+{
+  "resourceName": "imagestorage",
+  "policyUUID": "6ee2259b",
+  "bucketName": "laundrycoachbucket",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ"
+  ],
+  "triggerFunction": "S3Trigger2cd553a6",
+  "groupAccess": {}
+}
