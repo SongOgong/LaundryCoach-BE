@@ -19,10 +19,18 @@
         "S3Trigger2cd553a6": {
           "deploymentBucketName": "amplify-amplifye943f2c067b54-staging-75411-deployment",
           "s3Key": "amplify-builds/S3Trigger2cd553a6-7a3734686e5849337646-build.zip"
+        },
+        "clothSearchFunction": {
+          "deploymentBucketName": "amplify-amplifye943f2c067b54-staging-75411-deployment",
+          "s3Key": "amplify-builds/clothSearchFunction-4d52583570576f5a346b-build.zip"
         }
       },
       "storage": {
         "imagestorage": {}
+      },
+      "api": {
+        "laundrycoachfe": {},
+        "clothSearchAPI": {}
       }
     }
   }

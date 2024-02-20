@@ -1,5 +1,19 @@
 {
   "api": {
+    "clothSearchAPI": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "clothSearchFunction"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "laundrycoachfe": {
       "dependsOn": [
         {
@@ -68,6 +82,11 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "clothSearchFunction": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
@@ -84,6 +103,22 @@
         {
           "category": "function",
           "resourceName": "S3Trigger2cd553a6"
+        }
+      ]
+    },
+    "AMPLIFY_function_clothSearchFunction_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "clothSearchFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_clothSearchFunction_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "clothSearchFunction"
         }
       ]
     }
