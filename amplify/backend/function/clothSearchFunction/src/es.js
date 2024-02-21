@@ -1,15 +1,19 @@
 const { Client } = require('@elastic/elasticsearch');
 
-const esConnect = (cid, user, passwd) => {
-    const es = new Client({ cloud: { id: cid }, auth: { username: user, password: passwd } });
+const esConnect = (apiKey) => {
+    const es = new Client({
+        node: process.env.ES_ENDPOINT,
+        auth: {
+            username: 'laundrycoach-user',
+            password: apiKey,
+            roles : [ "laundry-coach-user" ]
+        }
+    });
     return es;
 };
 
 const getSearchResult = async (queryText) => {
-    const cid = process.env.ES_CLOUD_ID;
-    const cu = process.env.ES_CLOUD_USER;
-    const cp = process.env.ES_CLOUD_PASSWD;
-    const es = esConnect(cid, cu, cp);
+    const es = esConnect(process.env.ES_CLOUD_PW);
 
     const query = {
         "query": {
@@ -43,9 +47,11 @@ const getSearchResult = async (queryText) => {
     const index = 'clothes_laundry';
     const resp = await es.search({ index, body: query });
 
-    // 쿼리 결과 처리
-    const popularMaterials = resp.body.aggregations.popular_materials.buckets;
-    const howToLaundry = resp.body.aggregations.how_to_laundry.buckets;
+    // // 쿼리 결과 처리
+    const popularMaterials = resp.aggregations.popular_materials.buckets;
+    const howToLaundry = resp.aggregations.how_to_laundry.buckets;
 
     return { popularMaterials, howToLaundry };
 };
+
+module.exports = { getSearchResult };
