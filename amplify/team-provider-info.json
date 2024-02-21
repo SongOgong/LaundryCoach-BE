@@ -22,7 +22,7 @@
         },
         "clothSearchFunction": {
           "deploymentBucketName": "amplify-amplifye943f2c067b54-staging-75411-deployment",
-          "s3Key": "amplify-builds/clothSearchFunction-344b61505472614b526b-build.zip"
+          "s3Key": "amplify-builds/clothSearchFunction-55707664796543687672-build.zip"
         }
       },
       "storage": {

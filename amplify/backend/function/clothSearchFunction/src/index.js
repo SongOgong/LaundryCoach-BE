@@ -94,7 +94,7 @@ exports.handler = async (event) => {
     statusCode: 200,
     body: JSON.stringify(finalSearchResult)
   };
-  
+
     // return awsServerlessExpress.proxy(server, callback, 'PROMISE').promise;
 };
 

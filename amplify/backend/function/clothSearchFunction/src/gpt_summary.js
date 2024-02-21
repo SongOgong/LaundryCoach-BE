@@ -23,7 +23,7 @@ const summarizeWithGpt = async (organizedSearchResult) => {
         return "검색 결과가 없습니다.";
     }
 
-    const prompt = `${organizedSearchResult.materials}: 소재에 대해 설명해줘. 그리고, ${organizedSearchResult.howToLaundry_desc}: 세탁방법도 한국어로 친절하게 설명해줘.`;
+    const prompt = `${organizedSearchResult.materials}: 소재에 대해 설명해줘. 그리고 각 소재별 세탁방법도 한국어로 친절하게 설명해줘. 총 500자 이내로 알려줘.`;
     const answer = await chatGpt(prompt);
 
     return answer.trim();
