@@ -14,6 +14,20 @@
       "providerPlugin": "awscloudformation",
       "service": "API Gateway"
     },
+    "labelSearchAPI": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "labelSearch"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "laundrycoachfe": {
       "dependsOn": [
         {
@@ -39,7 +53,6 @@
           ],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDate": "2024-03-21T01:05:44.258Z",
               "apiKeyExpirationDays": 30,
               "description": "api key description"
             },
@@ -87,6 +100,11 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "labelSearch": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
@@ -119,6 +137,22 @@
         {
           "category": "function",
           "resourceName": "clothSearchFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_labelSearch_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "labelSearch"
+        }
+      ]
+    },
+    "AMPLIFY_function_labelSearch_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "labelSearch"
         }
       ]
     }

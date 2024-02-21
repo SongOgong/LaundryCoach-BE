@@ -1,3 +1,12 @@
+type AnalysisResult @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  user_id: String
+  title: String
+  imagePath: AWSURL
+  symbol: [String]
+  memo: String
+}
+
 type WashingMethod @model @auth(rules: [{allow: public}]) {
   id: ID!
   category: String
@@ -17,12 +26,11 @@ type MyCloset @model @auth(rules: [{allow: public, operations: [create, read, de
 
 type SearchResult @model @auth(rules: [{allow: public, operations: [create, read, delete]}, {allow: private}]) {
   id: ID!
+  user_id: ID
   title: String!
   materials: String
   laundry_method: [String]
   summary: String
-  user_id: ID
-  label_img: AWSURL
 }
 
 type LaundryTips @model @auth(rules: [{allow: public}]) {
@@ -30,5 +38,4 @@ type LaundryTips @model @auth(rules: [{allow: public}]) {
   title: String
   desc: String
   background_img: AWSURL
-}
- 
+} 

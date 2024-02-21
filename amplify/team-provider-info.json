@@ -23,6 +23,10 @@
         "clothSearchFunction": {
           "deploymentBucketName": "amplify-amplifye943f2c067b54-staging-75411-deployment",
           "s3Key": "amplify-builds/clothSearchFunction-55707664796543687672-build.zip"
+        },
+        "labelSearch": {
+          "deploymentBucketName": "amplify-amplifye943f2c067b54-staging-75411-deployment",
+          "s3Key": "amplify-builds/labelSearch-454e364b4a6d6771557a-build.zip"
         }
       },
       "storage": {
@@ -30,7 +34,8 @@
       },
       "api": {
         "laundrycoachfe": {},
-        "clothSearchAPI": {}
+        "clothSearchAPI": {},
+        "labelSearchAPI": {}
       }
     }
   }
