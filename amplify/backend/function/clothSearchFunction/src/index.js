@@ -20,9 +20,9 @@ const getWashingMethods = async (howToLaundry) => {
     // DynamoDB 쿼리 작성
     const input = {
         TableName: 'smwu-003-washing-method-list', // 테이블 이름 설정
-        method_name: {
-          S: key
-        }
+        Key: {
+          method_name: { S: key } // Key 필드로 변경
+      }
     };
     
 
@@ -30,10 +30,10 @@ const getWashingMethods = async (howToLaundry) => {
         // DynamoDB에서 아이템 가져오기
         const command = new GetItemCommand(input);
         const response = await client.send(command);
+
+        const result = response.Item ? "[" + response.Item.category.S + "] " + response.Item.desc.S : 'Description not found';
         
-        console.log(response);
-        
-        return { key, washingMethod: response.Item ? response.Item.desc : 'Description not found' };
+        return { key, washingMethod: result };
     } catch (error) {
         console.error(`Error fetching washing method for key ${key}:`, error);
         return { key, washingMethod: 'Error fetching description' };
@@ -46,51 +46,56 @@ const getWashingMethods = async (howToLaundry) => {
 
 // 검색 결과 정리
 const organizeSearchResult = async (searchResult) => {
-    // 소재 저장
-    const popularMaterials = searchResult.popularMaterials.map((item) => item.key);
-    const materials = popularMaterials.join(', ');
+  if (!searchResult || !searchResult.howToLaundry || !searchResult.popularMaterials) {
+    return { materials: 'No materials found', howToLaundry_desc: 'No laundry methods found' };
+  }
 
-    // 세탁 방법 저장
-    const howToLaundry_desc = await getWashingMethods(searchResult.howToLaundry); // await 추가
+  // 소재 저장
+  const popularMaterials = searchResult.popularMaterials.map((item) => item.key);
+  const materials = popularMaterials.join(', ');
 
-    // 결과 반환
-    return { materials, howToLaundry_desc };
+  // 세탁 방법 저장
+  const howToLaundry_desc = await getWashingMethods(searchResult.howToLaundry); // await 추가
+
+  // 결과 반환
+  return { materials, howToLaundry_desc };
 };
 
 
 // 최종 검색 결과 생성
-const getFinalSearchResult = async (organizedSearchResult, summary) => {
-    const materials = organizedSearchResult.materials;
-    const methods = organizedSearchResult.methods;
+const getFinalSearchResult = async (query, organizedSearchResult, summary) => {
+  const materials = organizedSearchResult.materials;
+  const methods = organizedSearchResult.howToLaundry_desc;
 
-    return {
-        materials: materials,
-        methods: methods,
-        summary: summary
-    };
+  return {
+      title: query,
+      materials: materials,
+      methods: methods,
+      summary: summary
+  };
 };
 
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
-exports.handler = async (event, callback) => {
+exports.handler = async (event) => {
 
   console.log('Received event:', JSON.stringify(event, null, 2));
   console.log('Received event.queryStringParameters:', JSON.stringify(event.queryStringParameters, null, 2));
 
-    // URL 파라미터로부터 쿼리 추출
-    const query = event.queryStringParameters.filter;   // 쿼리 추출
-    const searchResult = await getSearchResult(query);  // 검색 결과 가져오기
-    const organizedSearchResult = organizeSearchResult(searchResult); // 검색 결과 정리
-    const summary = await summarizeWithGpt(organizedSearchResult);  // GPT-3.5 Turbo를 사용하여 요약 정리
-    const finalSearchResult = await getFinalSearchResult(organizedSearchResult, summary);   // 최종 검색 결과 생성
+  // URL 파라미터로부터 쿼리 추출
+  const query = event.queryStringParameters ? event.queryStringParameters.filter : '';   // 쿼리 추출
+  const searchResult = await getSearchResult(query);  // 검색 결과 가져오기
+  const organizedSearchResult = await organizeSearchResult(searchResult); // 검색 결과 정리
+  const summary = await summarizeWithGpt(organizedSearchResult);  // GPT-3.5 Turbo를 사용하여 요약 정리
+  const finalSearchResult = await getFinalSearchResult(query, organizedSearchResult, summary);   // 최종 검색 결과 생성
 
-    callback(null, {
-        statusCode: 200,
-        body: JSON.stringify(finalSearchResult)
-    });
-
-    return awsServerlessExpress.proxy(server, callback, 'PROMISE').promise;
+  return {
+    statusCode: 200,
+    body: JSON.stringify(finalSearchResult)
+  };
+  
+    // return awsServerlessExpress.proxy(server, callback, 'PROMISE').promise;
 };
 
 // /**
