@@ -8,7 +8,7 @@
     "aws-serverless-express": "^3.3.5",
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
-    "openai": "^4.20.1",
+    "openai": "^4.28.0",
     "@elastic/elasticsearch": "~8.12.1"
   },
   "devDependencies": {
