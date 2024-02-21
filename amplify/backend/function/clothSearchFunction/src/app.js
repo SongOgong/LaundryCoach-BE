@@ -12,6 +12,7 @@ See the License for the specific language governing permissions and limitations 
 const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+const { getSearchResult } = require('./es')
 
 // declare a new express app
 const app = express()
@@ -32,7 +33,14 @@ app.use(function(req, res, next) {
 
 app.get('/clothSearch', function(req, res) {
   // Add your code here
-  res.json({success: 'get call succeed!', url: req.url});
+  try {
+    const searchResult = getSearchResult('니트')
+
+    res.json({success: 'get call succeed!', url: req.url, searchResult: searchResult});
+  } catch (error) {
+    console.error('Error fetching washing method for key:', error);
+    res.json({error: 'Error fetching washing method for key:', error});
+  }
 });
 
 app.get('/clothSearch/*', function(req, res) {
