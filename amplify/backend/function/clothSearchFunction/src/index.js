@@ -85,10 +85,15 @@ exports.handler = async (event) => {
 
   // URL 파라미터로부터 쿼리 추출
   const query = event.queryStringParameters ? event.queryStringParameters.filter : '';   // 쿼리 추출
-  const searchResult = await getSearchResult(query);  // 검색 결과 가져오기
+  // 소재 추가 검색
+  const material_query = event.queryStringParameters ? event.queryStringParameters.material : '';   // 소재 추가 검색
+
+  const searchResult = await getSearchResult(query, material_query);  // 검색 결과 가져오기
   const organizedSearchResult = await organizeSearchResult(searchResult); // 검색 결과 정리
   const summary = await summarizeWithGpt(organizedSearchResult);  // GPT-3.5 Turbo를 사용하여 요약 정리
-  const finalSearchResult = await getFinalSearchResult(query, organizedSearchResult, summary);   // 최종 검색 결과 생성
+
+  const finalQuery = material_query ? material_query + " " + query : query;
+  const finalSearchResult = await getFinalSearchResult(finalQuery, organizedSearchResult, summary);   // 최종 검색 결과 생성
 
   return {
     statusCode: 200,

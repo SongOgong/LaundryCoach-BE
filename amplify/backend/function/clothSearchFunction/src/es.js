@@ -12,18 +12,20 @@ const esConnect = (apiKey) => {
     return es;
 };
 
-const getSearchResult = async (queryText) => {
+const getSearchResult = async (queryText, material_query) => {
     const es = esConnect(process.env.ES_CLOUD_PW);
 
-    const query = {
+    const query1 = {
         "query": {
             "bool": {
                 "should": [
                     {
                         "match": {
-                            "종류(소분류)": queryText
+                          "종류(소분류)": {
+                            "query" : queryText
+                          }
                         }
-                    }
+                      }
                 ]
             }
         },
@@ -43,6 +45,48 @@ const getSearchResult = async (queryText) => {
             }
         }
     };
+
+    const query2 = {
+        "query": {
+            "bool": {
+                "should": [
+                    {
+                        "match": {
+                          "종류(소분류)": {
+                            "query" : queryText,
+                            "boost": 20
+                          }
+                        }
+                      },
+                      {
+                        "match": {
+                          "소재": {
+                            "query" : material_query,
+                            "boost": 10
+                          }
+                        }
+                      }
+                ]
+            }
+        },
+        "size": 0,
+        "aggs": {
+            "popular_materials": {
+                "terms": {
+                    "field": "소재",
+                    "size": 3
+                }
+            },
+            "how_to_laundry": {
+                "terms": {
+                    "field": "세탁방법",
+                    "size": 5
+                }
+            }
+        }
+    };
+
+    const query = material_query ? query2 : query1;
 
     const index = 'clothes_laundry';
     const resp = await es.search({ index, body: query });
